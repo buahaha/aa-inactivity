@@ -6,15 +6,12 @@ from allianceauth.services.hooks import MenuItemHook, UrlHook
 from . import urls
 
 
-class InactivityMenuItem(MenuItemHook):
-    """ This class ensures only authorized users will see the menu entry """
-
+class LeaveOfAbsenceMenuItem(MenuItemHook):
     def __init__(self):
-        # setup menu entry for sidebar
         MenuItemHook.__init__(
             self,
-            _("inactivity"),
-            "fas fa-cube fa-fw",
+            _("Leave of Absence"),
+            "fas fa-business-time fa-fw",
             "inactivity:index",
             navactive=["inactivity:"],
         )
@@ -25,9 +22,9 @@ class InactivityMenuItem(MenuItemHook):
         return ""
 
 
-# @hooks.register("menu_item_hook")
-# def register_menu():
-#    return InactivityMenuItem()
+@hooks.register("menu_item_hook")
+def register_menu():
+    return LeaveOfAbsenceMenuItem()
 
 
 @hooks.register("url_hook")

@@ -75,8 +75,8 @@ class LeaveOfAbsence(models.Model):
     approver = models.ForeignKey(
         User, on_delete=models.SET_NULL, blank=True, null=True, related_name="+"
     )
-    start = models.DateTimeField(help_text=_("The start of the leave of absence."))
-    end = models.DateTimeField(
+    start = models.DateField(help_text=_("The start of the leave of absence."))
+    end = models.DateField(
         blank=True,
         null=True,
         help_text=_(

@@ -28,7 +28,7 @@ def send_inactivity_ping(user_pk: int, config_pk: int):
 
 @shared_task
 def check_inactivity_for_user(user_pk: int):
-    now = datetime.datetime.now(datetime.timezone.utc)
+    now = datetime.datetime.now(datetime.timezone.utc).date()
     user = User.objects.get(pk=user_pk)
     if (
         user.leaveofabsence_set.filter(
@@ -45,7 +45,7 @@ def check_inactivity_for_user(user_pk: int):
             if config.is_applicable_to(user):
                 threshold_date = datetime.datetime.now(
                     datetime.timezone.utc
-                ) - datetime.timedelta(days=config.days)
+                ).date() - datetime.timedelta(days=config.days)
                 registered = (
                     Character.objects.filter(
                         Q(character_ownership__user__pk=user_pk)

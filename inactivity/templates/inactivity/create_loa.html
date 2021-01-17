@@ -2,27 +2,23 @@
 {% load i18n %}
 {% load humanize %}
 {% load static %}
-
+{% load bootstrap %}
 {% block details %}
 
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <h3 class="panel-title">{% translate "Current Requests" %}</h3>
+            <h3 class="panel-title">{% translate "Create Request" %}</h3>
         </div>
         <div class="panel-body" style="min-height: 100px;">
-            <div class="pull-right">
-                <a class="btn btn-success" href="{% url 'inactivity:create_loa_request' %}">{% translate "Create Request" %}</a>
-            </div>
-            <table id="table-requests" style="width: 100%;" class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>{% translate "Start" %}</th>
-                        <th>{% translate "End" %}</th>
-                        <th>{% translate "Approved" %}</th>
-                        <th></th>
-                    </tr>
-                </thead>
-            </table>
+            <form role="form" method="POST" action="{% url 'inactivity:create_loa_request' %}">
+                {% csrf_token %}
+                {{ create_form|bootstrap }}
+                <div class="form-group">
+                    <div class="pull-right">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 

@@ -49,13 +49,11 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "start",
-                    models.DateTimeField(
-                        help_text="The start of the leave of absence."
-                    ),
+                    models.DateField(help_text="The start of the leave of absence."),
                 ),
                 (
                     "end",
-                    models.DateTimeField(
+                    models.DateField(
                         blank=True,
                         help_text="The end of the leave of absence. Leave blank for an indefinite leave.",
                         null=True,

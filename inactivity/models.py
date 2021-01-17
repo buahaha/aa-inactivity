@@ -46,6 +46,9 @@ class InactivityPingConfig(models.Model):
         related_name="+",
     )
 
+    class Meta:
+        default_permissions = ()
+
     def __str__(self):
         return _("ping config: %(name)s") % {"name": self.name}
 
@@ -62,6 +65,9 @@ class InactivityPing(models.Model):
     config = models.ForeignKey(InactivityPingConfig, on_delete=models.CASCADE)
     timestamp = models.DateTimeField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        default_permissions = ()
 
     def __str__(self):
         return _("ping [config='%(config_name)s' user='%(user_name)s']") % {
@@ -84,6 +90,9 @@ class LeaveOfAbsence(models.Model):
         ),
     )
     notes = models.TextField(blank=True)
+
+    class Meta:
+        default_permissions = ()
 
     def __str__(self):
         return _("%(user_name)s's leave starting %(start)s") % {

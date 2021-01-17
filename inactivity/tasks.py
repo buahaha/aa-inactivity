@@ -60,7 +60,9 @@ def check_inactivity_for_user(user_pk: int):
                     ).count()
                     > 0
                 )
-                excused = last_loa and threshold_date < last_loa.end
+                excused = last_loa and (
+                    not last_loa.end or threshold_date < last_loa.end
+                )
                 pinged = (
                     InactivityPing.objects.filter(
                         user__pk=user_pk, config=config

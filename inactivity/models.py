@@ -1,4 +1,5 @@
 from django.contrib.auth.models import Group, User
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -33,6 +34,7 @@ class InactivityPingConfig(models.Model):
         help_text=_(
             "Groups subject to the inactivity ping. If empty, applies to all groups."
         ),
+        related_name="+",
     )
 
     states = models.ManyToManyField(
@@ -41,6 +43,7 @@ class InactivityPingConfig(models.Model):
         help_text=_(
             "States subject to the inactivity ping. If empty, applies to all states."
         ),
+        related_name="+",
     )
 
     def __str__(self):
@@ -63,5 +66,31 @@ class InactivityPing(models.Model):
     def __str__(self):
         return _("ping [config='%(config_name)s' user='%(user_name)s']") % {
             "config_name": self.config.name,
-            "user_name": self.user.username,
+            "user_name": self.user.profile.main_character.character_name,
         }
+
+
+class LeaveOfAbsence(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    approver = models.ForeignKey(
+        User, on_delete=models.SET_NULL, blank=True, null=True, related_name="+"
+    )
+    start = models.DateTimeField(help_text=_("The start of the leave of absence."))
+    end = models.DateTimeField(
+        blank=True,
+        null=True,
+        help_text=_(
+            "The end of the leave of absence. Leave blank for an indefinite leave."
+        ),
+    )
+    notes = models.TextField(blank=True)
+
+    def __str__(self):
+        return _("%(user_name)s's leave starting %(start)s") % {
+            "start": self.start,
+            "user_name": self.user.profile.main_character.character_name,
+        }
+
+    def clean(self):
+        if self.end and self.end < self.start:
+            raise ValidationError(_("End date must be after start date."))

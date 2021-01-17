@@ -2,17 +2,24 @@
 
 This is a player activity monitoring plugin app for [Alliance Auth](https://gitlab.com/allianceauth/allianceauth) (AA).
 
-![License](https://img.shields.io/badge/license-GPL-green) ![python](https://img.shields.io/badge/python-3.6-informational) ![django](https://img.shields.io/badge/django-3.1-informational) ![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)
+![release](https://img.shields.io/pypi/v/aa-inactivity?label=release)
+![License](https://img.shields.io/badge/license-GPL-green)
+![python](https://img.shields.io/pypi/pyversions/aa-inactivity)
+![django](https://img.shields.io/pypi/djversions/aa-inactivity?label=django)
+![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)
+![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)
+
 
 ## Features
 
 - Notify users inactive for a specified time.
+- Keep track of leave of absence requests.
 
 # Installation
 
 ## Requirements
 
-This integration needs [Member Audit](https://gitlab.com/ErikKalkoken/aa-memberaudit) and [Secure Groups](https://github.com/pvyParts/allianceauth-secure-groups) to function. Please make sure they are installed before continuing.
+This integration needs [Member Audit](https://gitlab.com/ErikKalkoken/aa-memberaudit) (and optionally, but ideally, [DiscordBot](https://github.com/pvyParts/allianceauth-discordbot)) to function. Please make sure they are installed before continuing.
 
 ## Steps
 

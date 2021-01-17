@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import InactivityPing, InactivityPingConfig
+from .models import InactivityPing, InactivityPingConfig, LeaveOfAbsence
 
 # Register your models here.
 
@@ -26,3 +26,17 @@ class InactivityPingAdmin(admin.ModelAdmin):
 
     def has_change_permission(self, request, obj=None):
         return False
+
+
+def approve_leaveofabsence(modeladmin, request, queryset):
+    queryset.update(approver=request.user)
+
+
+approve_leaveofabsence.short_description = "Approve selected leave of absences"
+
+
+@admin.register(LeaveOfAbsence)
+class LeaveOfAbsenceAdmin(admin.ModelAdmin):
+    list_display = ("user", "start", "end", "approver")
+    ordering = ("-start",)
+    actions = [approve_leaveofabsence]

@@ -28,7 +28,7 @@ def list_loa_requests(request):
     now = datetime.datetime.now(datetime.timezone.utc)
 
     for req in LeaveOfAbsence.objects.filter(
-        Q(user=request.user), ~Q(end=None) | Q(end__gt=now)
+        Q(user=request.user), Q(end=None) | Q(end__gt=now)
     ):
         results.append(
             {

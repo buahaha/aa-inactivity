@@ -12,7 +12,10 @@ class General(models.Model):
     class Meta:
         managed = False
         default_permissions = ()
-        permissions = (("basic_access", "Can access this app"),)
+        permissions = (
+            ("basic_access", "Can access this app"),
+            ("manage_leave", "Can manage leave of absence requests"),
+        )
 
 
 class InactivityPingConfig(models.Model):

@@ -22,6 +22,14 @@ def index(request):
 
 
 @login_required
+@permission_required("inactivity.manage_leave")
+def manage(request):
+
+    context = {}
+    return render(request, "inactivity/manage.html", context)
+
+
+@login_required
 @permission_required("inactivity.basic_access")
 def list_loa_requests(request):
     results = []
@@ -44,16 +52,57 @@ def list_loa_requests(request):
 
 @login_required
 @permission_required("inactivity.manage_leave")
+def list_pending_loa_requests(request):
+    results = []
+    now = datetime.datetime.now(datetime.timezone.utc)
+
+    for req in LeaveOfAbsence.objects.filter(
+        Q(end=None) | Q(end__gt=now), Q(approver=None)
+    ):
+        results.append(
+            {
+                "user": req.user.profile.main_character.character_name,
+                "start": req.start,
+                "end": req.end if req.end else "&mdash;",
+                "approved": req.approver is not None,
+                "pk": req.pk,
+            }
+        )
+
+    return JsonResponse(results, safe=False)
+
+
+@login_required
+@permission_required("inactivity.manage_leave")
 def approve_loa_request(request, request_id):
-    pass
+    req = LeaveOfAbsence.objects.get(pk=request_id)
+    req.approver = request.user
+    req.save()
+    messages_plus.success(
+        request,
+        format_html(
+            _("Your have appproved %(user)s's leave request.")
+            % {
+                "user": format_html(
+                    "<strong>{}</strong>",
+                    req.user.profile.main_character.character_name,
+                ),
+            }
+        ),
+    )
+    return redirect("inactivity:manage_requests")
 
 
 @login_required
 @permission_required("inactivity.basic_access")
 @require_POST
 def cancel_loa_request(request, request_id):
-    candidate = LeaveOfAbsence.objects.filter(user=request.user, pk=request_id).first()
-
+    if request.user.has_perm("inactivity.manage_leave"):
+        candidate = LeaveOfAbsence.objects.filter(pk=request_id).first()
+    else:
+        candidate = LeaveOfAbsence.objects.filter(
+            user=request.user, pk=request_id
+        ).first()
     if candidate:
         candidate.delete()
         messages_plus.info(

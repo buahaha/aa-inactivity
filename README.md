@@ -46,6 +46,7 @@ Run migrations:
 
 ```bash
 python manage.py migrate
+python manage.py collectstatic
 ```
 
 Restart your supervisor services for Auth

@@ -4,7 +4,11 @@ $(document).ready(function () {
     "use strict";
 
     var listPendingRequestsUrl = loaSettings.listPendingRequestsUrl;
+
     var csrfToken = loaSettings.csrfToken;
+    function viewRequestModalUrl(id) {
+        return loaSettings.viewRequestModalUrl.replace("12345",id);
+    }
     function approveRequestUrl(id) {
         return loaSettings.approveRequestUrl.replace("12345",id);
     }
@@ -25,7 +29,7 @@ $(document).ready(function () {
             { data: "user" },
             { data: "start" },
             { data: "end" },
-            { data: "pk" },
+            { data: "pk", className: "nowrap" },
         ],
 
         lengthMenu: [
@@ -40,16 +44,19 @@ $(document).ready(function () {
                 render: function (data, type, row) {
                     if (type === "display") {
                         return (
+                            '<div style="white-space: nowrap;"><button class="btn btn-info btn-sm btn-square" data-toggle="modal" data-target="#modalViewRequestContainer" data-ajax_url="' +
+                                viewRequestModalUrl(data) +
+                                '" aria-label="Request Info"><span class="fas fa-info-circle"></span></button>&nbsp;' +
                             '<form method="post" class="inline" action="' + cancelRequestUrl(data) + '">' +
                         csrfToken +
                             '<button type="submit" class="btn btn-sm btn-danger btn-square">' +
                             '<span class="fas fa-trash-alt"></span>' +
-                            '</button></form>' +
+                            '</button></form>&nbsp;' +
                             '<form method="post" class="inline" action="' + approveRequestUrl(data) + '">' +
                         csrfToken +
                             '<button type="submit" class="btn btn-sm btn-primary btn-square">' +
                             '<span class="fas fa-check"></span>' +
-                            '</button></form>'
+                            '</button></form></div>'
                         );
                     }
 

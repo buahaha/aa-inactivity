@@ -24,4 +24,9 @@ urlpatterns = [
         views.approve_loa_request,
         name="approve_loa_request",
     ),
+    path(
+        "loa_requests/<int:request_id>",
+        views.view_loa_request,
+        name="view_loa_request",
+    ),
 ]

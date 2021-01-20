@@ -2,7 +2,7 @@ import datetime
 
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import HttpResponseNotFound, JsonResponse
 from django.shortcuts import redirect, render
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
@@ -29,6 +29,35 @@ def manage(request):
     return render(request, "inactivity/manage.html", context)
 
 
+def convert_loa(loa: LeaveOfAbsence) -> dict:
+    return {
+        "user": loa.user.profile.main_character.character_name,
+        "start": loa.start,
+        "end": loa.end if loa.end else "&mdash;",
+        "approved": loa.approver is not None,
+        "pk": loa.pk,
+        "notes": loa.notes,
+    }
+
+
+@login_required
+@permission_required("inactivity.basic_access")
+def view_loa_request(request, request_id):
+    if request.user.has_perm("inactivity.manage_leave"):
+        candidate = LeaveOfAbsence.objects.filter(pk=request_id).first()
+    else:
+        candidate = LeaveOfAbsence.objects.filter(
+            user=request.user, pk=request_id
+        ).first()
+    if candidate:
+        context = {"request": convert_loa(candidate)}
+
+        return render(request, "inactivity/modals/view_request_content.html", context)
+
+    else:
+        return HttpResponseNotFound("<h1>Request not found</h1>")
+
+
 @login_required
 @permission_required("inactivity.basic_access")
 def list_loa_requests(request):
@@ -38,14 +67,7 @@ def list_loa_requests(request):
     for req in LeaveOfAbsence.objects.filter(
         Q(user=request.user), Q(end=None) | Q(end__gt=now)
     ):
-        results.append(
-            {
-                "start": req.start,
-                "end": req.end if req.end else "&mdash;",
-                "approved": req.approver is not None,
-                "pk": req.pk,
-            }
-        )
+        results.append(convert_loa(req))
 
     return JsonResponse(results, safe=False)
 
@@ -59,15 +81,7 @@ def list_pending_loa_requests(request):
     for req in LeaveOfAbsence.objects.filter(
         Q(end=None) | Q(end__gt=now), Q(approver=None)
     ):
-        results.append(
-            {
-                "user": req.user.profile.main_character.character_name,
-                "start": req.start,
-                "end": req.end if req.end else "&mdash;",
-                "approved": req.approver is not None,
-                "pk": req.pk,
-            }
-        )
+        results.append(convert_loa(req))
 
     return JsonResponse(results, safe=False)
 

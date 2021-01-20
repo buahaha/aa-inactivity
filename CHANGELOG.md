@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Provide a way to view request notes from the frontend
 - New datepicker on LOA request creation
+### Changed
+- Made request approval status more accessible (and added colors)
 ### Fixed
 - CSS for buttons to approve requests
 

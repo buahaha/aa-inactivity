@@ -37,9 +37,9 @@ $(document).ready(function () {
                 render: function (data, type, row) {
                     if (type === "display") {
                         if (data) {
-                            return '<span class="fas fa-check-circle"></span>';
+                            return '<span class="fas fa-check-circle text-success" aria-label="Yes"></span>';
                         } else {
-                            return '<span class="fas fa-times-circle"></span>';
+                            return '<span class="fas fa-times-circle text-danger" aria-label="No"></span>';
                         }
                     }
 

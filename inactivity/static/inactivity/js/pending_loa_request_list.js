@@ -29,7 +29,7 @@ $(document).ready(function () {
             { data: "user" },
             { data: "start" },
             { data: "end" },
-            { data: "pk", className: "nowrap" },
+            { data: "pk", className: "right-column" },
         ],
 
         lengthMenu: [

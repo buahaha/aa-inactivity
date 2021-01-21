@@ -13,13 +13,15 @@ This is a player activity monitoring plugin app for [Alliance Auth](https://gitl
 ## Features
 
 - Notify users inactive for a specified time.
+- Notify administrators when users meet an inactivity theshold.
 - Keep track of leave of absence requests.
+- Notify administrators when leave of absence requests are created or approved.
 
 # Installation
 
 ## Requirements
 
-This integration needs [Member Audit](https://gitlab.com/ErikKalkoken/aa-memberaudit) (and optionally, but ideally, [DiscordBot](https://github.com/pvyParts/allianceauth-discordbot)) to function. Please make sure they are installed before continuing.
+This app needs [Member Audit](https://gitlab.com/ErikKalkoken/aa-memberaudit) (and optionally, but ideally, [DiscordBot](https://github.com/pvyParts/allianceauth-discordbot)) to function. Please make sure they are installed before continuing.
 
 ## Steps
 

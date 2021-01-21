@@ -1,6 +1,7 @@
 import datetime
 import logging
 
+import dhooks_lite
 from celery import shared_task
 
 from django.contrib.auth.models import User
@@ -8,8 +9,7 @@ from django.db.models import Q
 
 from memberaudit.models import Character
 
-from .app_settings import INACTIVITY_DARK_MODE
-from .models import InactivityPing, InactivityPingConfig
+from .models import InactivityPing, InactivityPingConfig, Webhook
 from .utils import notify_user
 
 logger = logging.getLogger(__name__)
@@ -22,8 +22,21 @@ def send_inactivity_ping(user_pk: int, config_pk: int):
     InactivityPing.objects.create(
         config=config, timestamp=datetime.datetime.utcnow(), user=user
     )
-    if not INACTIVITY_DARK_MODE:
-        notify_user(user.pk, config.text)
+    for webhook in Webhook.objects.filter(
+        Q(ping_configs=config) | Q(ping_configs=None), Q(is_active=True)
+    ):
+        if str(Webhook.NOTIFICATION_TYPE_INACTIVE_USER) in webhook.notification_types:
+            if webhook.webhook_type == Webhook.WEBHOOK_TYPE_DISCORD:
+                hook = dhooks_lite.Webhook(webhook.url)
+                hook.execute(
+                    "**%(user_name)s** has been inactive for **%(days)s** day(s) and has been notified according to **%(config_name)s**"
+                    % {
+                        "user_name": user.profile.main_character.character_name,
+                        "days": config.days,
+                        "config_name": config.name,
+                    }
+                )
+    notify_user(user.pk, config.text)
 
 
 @shared_task

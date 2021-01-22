@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import InactivityPing, InactivityPingConfig, LeaveOfAbsence
+from .models import InactivityPing, InactivityPingConfig, LeaveOfAbsence, Webhook
 
 # Register your models here.
 
@@ -40,3 +40,9 @@ class LeaveOfAbsenceAdmin(admin.ModelAdmin):
     list_display = ("user", "start", "end", "approver")
     ordering = ("-start",)
     actions = [approve_leaveofabsence]
+
+
+@admin.register(Webhook)
+class WebhookAdmin(admin.ModelAdmin):
+    list_display = ("name", "webhook_type", "url")
+    filter_horizontal = ("ping_configs",)

@@ -8,7 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-
+- Webhooks for alerting when:
+  - Users hit inactivity thresholds
+  - Leave of Absence requests are created
+  - Leave of Absence requests are approved
 ### Changed
 
 ### Fixed
